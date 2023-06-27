@@ -116,7 +116,7 @@ class Beam:
         """
         self.img = pg.image.load("ex03/fig/beam.png") 
         self.rct = self.img.get_rect()
-        self.rct.centerx = bird.rct.right
+        self.rct.left = bird.rct.right
         self.rct.centery = bird.rct.centery
         self.vx, self.vy = +5, 0
         
@@ -160,7 +160,10 @@ def main():
 
         key_lst = pg.key.get_pressed()
         bird.update(key_lst, screen)
-        bomb.update(screen)
+        if bomb is not None:
+            bomb.update(screen)
+        if beam is not None:
+            beam.update(screen)                
         pg.display.update()
         tmr += 1
         clock.tick(50)
