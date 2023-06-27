@@ -5,8 +5,8 @@ import time
 import pygame as pg
 
 
-WIDTH = 1600  # ゲームウィンドウの幅
-HEIGHT = 900  # ゲームウィンドウの高さ
+WIDTH = 1000  # ゲームウィンドウの幅
+HEIGHT = 600  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5 # 爆弾の数
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
@@ -136,7 +136,18 @@ class Beam:
         """
         self.rct.move_ip(self.vx, self.vy)
         screen.blit(self.img, self.rct)
-
+        
+class Score:
+    def __init__(self):
+        self.font = pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.color = (0, 0, 255)
+        self.score = 0
+        self.img = self.font.render(f"スコア : {self.score}", 0, self.color)
+        self.rct = self.img.get_rect()
+        self.rct.center = (100, HEIGHT-50)
+    def update(self, screen: pg.Surface):
+        self.img = self.font.render(f"スコア : {self.score}", 0, self.color)
+        screen.blit(self.img, self.rct.center)
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -145,6 +156,7 @@ def main():
     # bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
     beam = None
+    scores = Score()    
 
     clock = pg.time.Clock()
     tmr = 0
@@ -163,6 +175,7 @@ def main():
             if bird.rct.colliderect(bomb.rct):
             # ゲームオーバー時に，こうかとん画像を切り替え，1秒間表示させる
                 bird.change_img(8, screen)
+                scores.update(screen)
                 pg.display.update()
                 time.sleep(1)
                 return
@@ -173,6 +186,7 @@ def main():
                     bombs[i] = None
                     beam = None
                     bird.change_img(6, screen)
+                    scores.score += 1 
                     pg.display.update()
 
         key_lst = pg.key.get_pressed()
@@ -181,7 +195,8 @@ def main():
         for bomb in bombs:
             bomb.update(screen)
         if beam is not None:
-            beam.update(screen)                
+            beam.update(screen)
+        scores.update(screen)
         pg.display.update()
         tmr += 1
         clock.tick(50)
