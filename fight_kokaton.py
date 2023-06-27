@@ -5,8 +5,8 @@ import time
 import pygame as pg
 
 
-WIDTH = 1000  # ゲームウィンドウの幅
-HEIGHT = 600  # ゲームウィンドウの高さ
+WIDTH = 1600  # ゲームウィンドウの幅
+HEIGHT = 900  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5 # 爆弾の数
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
@@ -155,6 +155,7 @@ def main():
     bird = Bird(3, (900, 400))
     # bomb = Bomb((255, 0, 0), 10)
     bombs = [Bomb((255, 0, 0), 10) for _ in range(NUM_OF_BOMBS)]
+    beams = [Beam(bird)]
     beam = None
     scores = Score()    
 
@@ -186,7 +187,8 @@ def main():
                     bombs[i] = None
                     beam = None
                     bird.change_img(6, screen)
-                    scores.score += 1 
+                    scores.score += 1
+                    beams[i] = None 
                     pg.display.update()
 
         key_lst = pg.key.get_pressed()
